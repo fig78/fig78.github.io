@@ -1,0 +1,91 @@
+# Configuration Sveltia CMS
+# Docs : https://github.com/sveltia/sveltia-cms
+#
+# À PERSONNALISER avant mise en ligne :
+#   - repo         : votre-compte/club-site
+#   - base_url     : l'URL de votre proxy OAuth (sveltia-cms-auth sur
+#                    Cloudflare Workers, voir README section "CMS")
+
+backend:
+  name: github
+  repo: VOTRE-COMPTE/club-site        # <- à remplacer
+  branch: main
+  base_url: https://sveltia-cms-auth.VOTRE-COMPTE.workers.dev  # <- à remplacer
+
+# Où vont les images uploadées par défaut
+media_folder: photos
+public_folder: /photos
+
+# Interface en français
+locale: fr
+
+collections:
+  # ------------------------------------------------------------------ #
+  - name: figurines
+    label: Figurines
+    label_singular: Figurine
+    folder: content/figurines
+    create: true
+    slug: "{{slug}}"                  # slug généré depuis le titre
+    # Les photos de chaque figurine vont dans photos/<slug>/
+    media_folder: /photos/{{slug}}
+    public_folder: /photos/{{slug}}
+    summary: "{{titre}} — {{peintre}}"
+    sortable_fields: [date, titre, peintre]
+    fields:
+      - {name: titre, label: Titre, widget: string}
+      - {name: peintre, label: Peintre, widget: string}
+      - name: jeu
+        label: Jeu
+        widget: select
+        options: [Age of Sigmar, The Old World, Warhammer 40k, Autre]
+        required: false
+      - {name: faction, label: Faction, widget: string, required: false}
+      - name: techniques
+        label: Techniques
+        widget: list
+        field: {name: technique, label: Technique, widget: string}
+        required: false
+      - name: tags
+        label: Tags
+        widget: list
+        field: {name: tag, label: Tag, widget: string}
+        required: false
+      - {name: date, label: Terminée le, widget: datetime, format: "YYYY-MM-DD", time_format: false}
+      - name: palette
+        label: Palette de couleurs
+        widget: list
+        required: false
+        summary: "{{fields.nom}}"
+        fields:
+          - {name: nom, label: Nom de la teinte, widget: string}
+          - {name: couleur, label: Couleur, widget: color}
+      - {name: body, label: Description, widget: markdown}
+
+  # ------------------------------------------------------------------ #
+  - name: evenements
+    label: Agenda
+    files:
+      - name: agenda
+        label: Événements du club
+        file: content/evenements.yaml
+        fields:
+          - name: evenements
+            label: Événements
+            widget: list
+            summary: "{{fields.titre}} ({{fields.date}})"
+            fields:
+              - {name: titre, label: Titre, widget: string}
+              - {name: date, label: Date, widget: datetime, format: "YYYY-MM-DD", time_format: false}
+              - {name: lieu, label: Lieu, widget: string, required: false}
+
+  # ------------------------------------------------------------------ #
+  - name: pages
+    label: Pages
+    folder: content/pages
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {name: titre, label: Titre, widget: string}
+      - {name: ordre, label: Ordre dans le menu, widget: number, default: 99}
+      - {name: body, label: Contenu, widget: markdown}

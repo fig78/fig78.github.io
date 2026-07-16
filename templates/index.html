@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block contenu %}
+<main class="conteneur">
+
+  {% if a_la_une %}
+  <section class="hero">
+    <a href="{{ racine }}/figurines/{{ a_la_une.slug }}.html">
+      <img src="{{ racine }}/{{ a_la_une.photo_principale }}" alt="{{ a_la_une.titre }}">
+    </a>
+    <div>
+      <span class="eyebrow">Dernière pièce sortie de l'atelier</span>
+      <h1>{{ a_la_une.titre }}</h1>
+      <p class="sous-titre">
+        peinte par <strong>{{ a_la_une.peintre }}</strong>
+        {% if a_la_une.jeu %} · {{ a_la_une.jeu }}{% endif %}
+      </p>
+      <a class="bouton" href="{{ racine }}/figurines/{{ a_la_une.slug }}.html">Voir la fiche</a>
+    </div>
+  </section>
+  {% endif %}
+
+  <section id="galerie">
+    <h2 class="section-titre">Galerie du club</h2>
+
+    <div class="filtres" role="group" aria-label="Filtrer la galerie">
+      <button class="filtre actif" data-tag="*">Tout</button>
+      {% for tag in tags %}
+      <button class="filtre" data-tag="{{ tag }}">{{ tag }}</button>
+      {% endfor %}
+    </div>
+
+    <div class="grille">
+      {% for fig in figurines %}
+      <article class="carte" data-tags="{{ fig.tous_tags|join('|') }}">
+        <a href="{{ racine }}/figurines/{{ fig.slug }}.html">
+          <img src="{{ racine }}/{{ fig.photo_principale }}" alt="{{ fig.titre }}" loading="lazy">
+          <div class="infos">
+            <h3>{{ fig.titre }}</h3>
+            <div class="meta">
+              <span class="peintre">{{ fig.peintre }}</span>
+              {% if fig.faction %} · {{ fig.faction }}{% endif %}
+            </div>
+          </div>
+        </a>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  {% if evenements %}
+  <section id="agenda">
+    <h2 class="section-titre">Prochains rendez-vous</h2>
+    {% for e in evenements %}
+    <div class="evenement">
+      <span class="date">{{ e.date.strftime("%d %b %Y") }}</span>
+      <span>
+        <strong>{{ e.titre }}</strong>
+        {% if e.lieu %}<span class="lieu"> — {{ e.lieu }}</span>{% endif %}
+      </span>
+    </div>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+</main>
+
+<script>
+/* Filtrage de la galerie par tag (aucune dépendance) */
+document.querySelectorAll(".filtre").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filtre").forEach(b => b.classList.remove("actif"));
+    btn.classList.add("actif");
+    const tag = btn.dataset.tag;
+    document.querySelectorAll(".carte").forEach(carte => {
+      const tags = carte.dataset.tags.split("|");
+      carte.style.display = (tag === "*" || tags.includes(tag)) ? "" : "none";
+    });
+  });
+});
+</script>
+{% endblock %}

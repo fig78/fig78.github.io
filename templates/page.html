@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block titre %}{{ page.titre }} — {{ site.nom }}{% endblock %}
+{% block contenu %}
+<main class="conteneur">
+  <div class="page-contenu">
+    <h1>{{ page.titre }}</h1>
+    {{ page.html|safe }}
+  </div>
+</main>
+{% endblock %}

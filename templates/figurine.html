@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block titre %}{{ fig.titre }} — {{ site.nom }}{% endblock %}
+{% block contenu %}
+<main class="conteneur">
+  <article class="fiche">
+
+    <div class="visuel">
+      <img id="photo-principale" src="{{ racine }}/{{ fig.photo_grande }}" alt="{{ fig.titre }}">
+      {% if fig.galerie|length > 1 %}
+      <div class="vignettes">
+        {% for photo in fig.galerie %}
+        <img src="{{ racine }}/{{ photo.thumb }}" data-large="{{ racine }}/{{ photo.large }}"
+             alt="{{ fig.titre }} — vue {{ loop.index }}" loading="lazy">
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <div>
+      <h1>{{ fig.titre }}</h1>
+
+      <div class="recette">
+        <h2>Recette de peinture</h2>
+        <dl>
+          <dt>Peintre</dt><dd>{{ fig.peintre }}</dd>
+          {% if fig.jeu %}<dt>Jeu</dt><dd>{{ fig.jeu }}</dd>{% endif %}
+          {% if fig.faction %}<dt>Faction</dt><dd>{{ fig.faction }}</dd>{% endif %}
+          {% if fig.techniques %}<dt>Techniques</dt><dd>{{ fig.techniques|join(", ") }}</dd>{% endif %}
+          {% if fig.date %}<dt>Terminée le</dt><dd>{{ fig.date.strftime("%d/%m/%Y") }}</dd>{% endif %}
+        </dl>
+        {% if fig.palette %}
+        <div class="pots">
+          {% for pot in fig.palette %}
+          <span class="pot"><i style="background:{{ pot.couleur }}"></i>{{ pot.nom }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      {{ fig.corps_html|safe }}
+
+      {% if fig.tous_tags %}
+      <div class="etiquettes">
+        {% for tag in fig.tous_tags %}<span class="etiquette">{{ tag }}</span>{% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+  </article>
+</main>
+
+<script>
+/* Clic sur une vignette = change la photo principale */
+document.querySelectorAll(".vignettes img").forEach(v => {
+  v.addEventListener("click", () => {
+    document.getElementById("photo-principale").src = v.dataset.large;
+  });
+});
+</script>
+{% endblock %}
