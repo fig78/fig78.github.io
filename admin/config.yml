@@ -8,7 +8,7 @@
 
 backend:
   name: github
-  repo: VOTRE-COMPTE/club-site        # <- à remplacer
+  repo: fig78/fig78.github.io
   branch: main
   base_url: https://sveltia-cms-auth.VOTRE-COMPTE.workers.dev  # <- à remplacer
 
