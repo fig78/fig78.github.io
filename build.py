@@ -40,10 +40,10 @@ OUT = ROOT / "_site"
 THUMB_SIZE = (720, 720)      # taille max des vignettes de galerie
 LARGE_SIZE = (1600, 1600)    # taille max des photos plein écran
 SITE = {
-    "nom": "Les Pinceaux du Ponant",          # <- personnalisez ici
+    "nom": "Fig'78",          # <- personnalisez ici
     "accroche": "Club de peinture sur figurines & jeux de figurines",
-    "discord": "https://discord.gg/votre-invitation",
-    "instagram": "https://instagram.com/votre-club",
+    "discord": "https://discord.gg/vezt7M4neS",
+    "instagram": "https://www.instagram.com/fig78_club/",
     "email": "contact@votre-club.fr",
 }
 
@@ -250,6 +250,11 @@ def build(clean: bool = False) -> None:
             tpl_page.render(page=page, evenements=evenements, pages=pages, racine="."),
             encoding="utf-8",
         )
+
+    # Images statiques (logo...)
+    img_src = STATIC / "img"
+    if img_src.exists():
+        shutil.copytree(img_src, OUT / "img", dirs_exist_ok=True)
 
     # Interface d'administration (Sveltia CMS)
     admin_src = ROOT / "admin"

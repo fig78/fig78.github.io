@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% block titre %}{{ site.nom }}{% endblock %}</title>
 <meta name="description" content="{{ site.accroche }}">
+<link rel="icon" type="image/jpeg" href="{{ racine }}/img/logo-fig78.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>{{ css }}</style>
@@ -12,7 +13,8 @@
 <body>
 <header class="site">
   <div class="conteneur">
-    <a class="logo" href="{{ racine }}/index.html">{{ site.nom }}</a>
+    <a class="logo" href="{{ racine }}/index.html"><img
+      src="{{ racine }}/img/logo-fig78.jpg" alt="" width="44" height="44">{{ site.nom }}</a>
     <nav class="principal">
       <a href="{{ racine }}/index.html#galerie">Galerie</a>
       <a href="{{ racine }}/index.html#agenda">Agenda</a>
