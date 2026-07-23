@@ -47,14 +47,38 @@
     </div>
 
   </article>
+
+  <div id="lightbox" class="lightbox" hidden>
+    <img id="lightbox-photo" src="" alt="">
+  </div>
 </main>
 
 <script>
-/* Clic sur une vignette = change la photo principale */
+const photoPrincipale = document.getElementById("photo-principale");
+const lightbox = document.getElementById("lightbox");
+const lightboxPhoto = document.getElementById("lightbox-photo");
+
+function agrandir(src, alt) {
+  lightboxPhoto.src = src;
+  lightboxPhoto.alt = alt;
+  lightbox.hidden = false;
+}
+
+/* Clic sur une vignette = change la photo principale et l'affiche en grand */
 document.querySelectorAll(".vignettes img").forEach(v => {
   v.addEventListener("click", () => {
-    document.getElementById("photo-principale").src = v.dataset.large;
+    photoPrincipale.src = v.dataset.large;
+    agrandir(v.dataset.large, v.alt);
   });
+});
+
+/* Clic sur la photo principale = zoom */
+photoPrincipale.addEventListener("click", () => agrandir(photoPrincipale.src, photoPrincipale.alt));
+
+/* Clic n'importe où sur l'overlay, ou touche Échap = fermer le zoom */
+lightbox.addEventListener("click", () => { lightbox.hidden = true; });
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") lightbox.hidden = true;
 });
 </script>
 {% endblock %}
