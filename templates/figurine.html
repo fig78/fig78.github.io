@@ -49,7 +49,10 @@
   </article>
 
   <div id="lightbox" class="lightbox" hidden>
+    <button type="button" class="lightbox-prec" aria-label="Photo précédente">‹</button>
     <img id="lightbox-photo" src="" alt="">
+    <button type="button" class="lightbox-suiv" aria-label="Photo suivante">›</button>
+    <span class="lightbox-compteur"></span>
   </div>
 </main>
 
@@ -57,28 +60,65 @@
 const photoPrincipale = document.getElementById("photo-principale");
 const lightbox = document.getElementById("lightbox");
 const lightboxPhoto = document.getElementById("lightbox-photo");
+const lightboxPrec = document.querySelector(".lightbox-prec");
+const lightboxSuiv = document.querySelector(".lightbox-suiv");
+const lightboxCompteur = document.querySelector(".lightbox-compteur");
 
-function agrandir(src, alt) {
-  lightboxPhoto.src = src;
-  lightboxPhoto.alt = alt;
+const photos = Array.from(document.querySelectorAll(".vignettes img")).map(v => ({
+  large: v.dataset.large,
+  alt: v.alt,
+}));
+let indexCourant = 0;
+
+function afficher(index) {
+  if (!photos.length) return;
+  indexCourant = (index + photos.length) % photos.length;
+  const photo = photos[indexCourant];
+  photoPrincipale.src = photo.large;
+  lightboxPhoto.src = photo.large;
+  lightboxPhoto.alt = photo.alt;
+  const multiple = photos.length > 1;
+  lightboxPrec.hidden = lightboxSuiv.hidden = !multiple;
+  lightboxCompteur.hidden = !multiple;
+  lightboxCompteur.textContent = `${indexCourant + 1} / ${photos.length}`;
+}
+
+function agrandir(index) {
+  afficher(index);
   lightbox.hidden = false;
 }
 
+function suivante() { afficher(indexCourant + 1); }
+function precedente() { afficher(indexCourant - 1); }
+
 /* Clic sur une vignette = change la photo principale et l'affiche en grand */
-document.querySelectorAll(".vignettes img").forEach(v => {
-  v.addEventListener("click", () => {
-    photoPrincipale.src = v.dataset.large;
-    agrandir(v.dataset.large, v.alt);
-  });
+document.querySelectorAll(".vignettes img").forEach((v, i) => {
+  v.addEventListener("click", () => agrandir(i));
 });
 
 /* Clic sur la photo principale = zoom */
-photoPrincipale.addEventListener("click", () => agrandir(photoPrincipale.src, photoPrincipale.alt));
+photoPrincipale.addEventListener("click", () => agrandir(indexCourant));
+
+lightboxPrec.addEventListener("click", e => { e.stopPropagation(); precedente(); });
+lightboxSuiv.addEventListener("click", e => { e.stopPropagation(); suivante(); });
 
 /* Clic n'importe où sur l'overlay, ou touche Échap = fermer le zoom */
 lightbox.addEventListener("click", () => { lightbox.hidden = true; });
 document.addEventListener("keydown", e => {
+  if (lightbox.hidden) return;
   if (e.key === "Escape") lightbox.hidden = true;
+  if (e.key === "ArrowRight") suivante();
+  if (e.key === "ArrowLeft") precedente();
+});
+
+/* Balayage tactile pour naviguer entre les photos */
+let toucheX = null;
+lightbox.addEventListener("touchstart", e => { toucheX = e.changedTouches[0].clientX; });
+lightbox.addEventListener("touchend", e => {
+  if (toucheX === null) return;
+  const delta = e.changedTouches[0].clientX - toucheX;
+  if (Math.abs(delta) > 40) delta < 0 ? suivante() : precedente();
+  toucheX = null;
 });
 </script>
 {% endblock %}
