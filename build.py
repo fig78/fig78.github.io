@@ -262,6 +262,12 @@ def build(clean: bool = False) -> None:
             encoding="utf-8",
         )
 
+    # Photos brutes : nécessaire pour les images insérées directement dans le
+    # corps Markdown (pages, description de figurine...), en plus des vignettes
+    # WebP déjà générées par traiter_photos() pour les galeries de figurines.
+    if PHOTOS.exists():
+        shutil.copytree(PHOTOS, OUT / "photos", dirs_exist_ok=True)
+
     # Images statiques (logo...)
     img_src = STATIC / "img"
     if img_src.exists():
