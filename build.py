@@ -64,6 +64,7 @@ class Figurine:
     tags: list[str] = field(default_factory=list)
     date: date | None = None
     palette: list[dict] = field(default_factory=list)  # [{nom, couleur}]
+    photos: list[str] = field(default_factory=list)  # chemins définis dans l'éditeur, dans l'ordre
     corps_html: str = ""
     photo_principale: str = ""      # URL relative de la vignette
     photo_grande: str = ""          # URL relative du grand format
@@ -113,6 +114,7 @@ def charger_figurines() -> list[Figurine]:
             tags=meta.get("tags", []) or [],
             date=vers_date(meta.get("date")),
             palette=meta.get("palette", []) or [],
+            photos=meta.get("photos", []) or [],
             corps_html=MD.convert(body),
         )
         figurines.append(fig)
@@ -169,12 +171,21 @@ def placeholder_svg(fig: Figurine) -> str:
 
 
 def traiter_photos(fig: Figurine) -> None:
-    """Génère vignette + grand format WebP pour chaque photo de la figurine."""
-    src_dir = PHOTOS / fig.slug
-    sources = sorted(
-        p for p in (src_dir.glob("*") if src_dir.exists() else [])
-        if p.suffix.lower() in {".jpg", ".jpeg", ".png", ".webp"}
-    )
+    """Génère vignette + grand format WebP pour chaque photo de la figurine.
+
+    Ordre déterminé par le champ `photos` du front-matter (renseigné depuis
+    l'éditeur, glisser-déposer pour réordonner). Si ce champ est vide (fiche
+    non migrée), on retombe sur l'ancien comportement : scan alphabétique de
+    photos/<slug>/.
+    """
+    if fig.photos:
+        sources = [p for p in (ROOT / chemin.lstrip("/") for chemin in fig.photos) if p.exists()]
+    else:
+        src_dir = PHOTOS / fig.slug
+        sources = sorted(
+            p for p in (src_dir.glob("*") if src_dir.exists() else [])
+            if p.suffix.lower() in {".jpg", ".jpeg", ".png", ".webp"}
+        )
     if not sources:
         uri = placeholder_svg(fig)
         fig.photo_principale = fig.photo_grande = uri

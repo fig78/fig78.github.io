@@ -31,10 +31,15 @@ palette:
 Description libre en **Markdown** : inspiration, difficultés, fierté...
 ```
 
-2. (Optionnel) Déposer les photos dans `photos/ma-figurine/`
-   — la première par ordre alphabétique devient la photo principale.
-   Vignettes et grands formats WebP sont générés automatiquement.
-   Sans photo, un placeholder est affiché.
+2. (Optionnel) Ajouter des photos via le champ **Photos** dans
+   l'éditeur web (`/admin/`) : ajout, suppression et réordonnancement
+   par glisser-déposer se font directement dans ce champ — la première
+   photo de la liste devient la photo principale. Vignettes et grands
+   formats WebP sont générés automatiquement. Sans photo, un placeholder
+   est affiché.
+   En édition directe du Markdown (hors CMS), le dépôt manuel de fichiers
+   dans `photos/ma-figurine/` reste possible : sans champ `photos` dans le
+   front-matter, l'ordre alphabétique des fichiers est utilisé en secours.
 
 3. `python3 build.py` — c'est en ligne au prochain push.
 

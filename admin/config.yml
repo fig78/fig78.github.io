@@ -35,6 +35,12 @@ collections:
     fields:
       - {name: titre, label: Titre, widget: string}
       - {name: peintre, label: Peintre, widget: string}
+      - name: photos
+        label: Photos
+        widget: image
+        multiple: true
+        required: false
+        hint: "La première photo devient l'image principale. Glisse-dépose les vignettes pour changer l'ordre."
       - name: jeu
         label: Jeu
         widget: select

@@ -1,6 +1,11 @@
 ---
 titre: The Gunner
 peintre: Pascal
+photos:
+  - /photos/the-gunner/Gunner-1.jpg
+  - /photos/the-gunner/Gunner-3.jpg
+  - /photos/the-gunner/Gunner-4.jpg
+  - /photos/the-gunner/gunner-smc.jpg
 techniques: [glacis, éclaircissages]
 tags: [Nautilus Miniatures, Paul Bonner, résine, buste, concours]
 date: 2025-03-24
